@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Register</h3>
+                </div>
+                <div class="panel-body">
+
+                    <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+                        {%csrf_token%}
+                        <div class="form-group">
+                            <label for="ask_input-login" class="col-md-2 control-label">Login</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="ask_input-login" placeholder="Login" name="login" maxlength="21" value="{{form.cleaned_data.login}}">
+                            </div>
+                            {% for error in form.login.errors %}
+                            <div class="col-xs-4 alert alert-danger col-md-offset-5 " role="alert" id="field-error">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <label for="ask_input-email" class="col-md-2 control-label">Email</label>
+                            <div class="col-md-10">
+                                <input type="email" class="form-control" id="ask_input-email" maxlength="120" placeholder="Email" name="email" value="{{form.cleaned_data.email}}">
+                            </div>
+                            {% for error in form.email.errors %}
+                             <div class="col-xs-4 alert alert-danger col-md-offset-5" role="alert" id="field-error">
+                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ error }}
+                             </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <label for="ask_input-email" class="col-md-2 control-label">Nickname</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="ask_input-nickname" maxlength="42" placeholder="Nickname" name="nickName" value="{{form.cleaned_data.nickName}}">
+                            </div>
+                             {% for error in form.nickName.errors %}
+                            <div class="col-xs-4 alert alert-danger col-md-offset-5" role="alert" id="field-error">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ error }}
+                            </div>
+                             {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <label for="ask_input-password" class="col-md-2 control-label">Password</label>
+                            <div class="col-md-10">
+                                <input type="password" class="form-control" id="ask_input-password" name="password1" maxlength="42" placeholder="Password">
+                            </div>
+                            {% for error in form.password1.errors %}
+                            <div class="col-md-3 alert alert-danger col-md-offset-5" role="alert" id="field-error">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <label for="ask_input-repeat-password" class="col-md-2 control-label">Repeat password</label>
+                            <div class="col-md-10">
+                                <input type="password" class="form-control" id="ask_input-repeat-password" name="password2" maxlength="42" placeholder="Repeat password">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="ask_input-upload-avatar" class="col-md-2 control-label">Upload avatar</label>
+                            <div class="col-md-10">
+                                {{ form.avatar }}
+                            </div>
+                            {% for error in form.avatar.errors %}
+                            <div class="col-xs-3 alert alert-danger col-md-offset-3" role="alert" id="field-error">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary" value="Register"><i class="glyphicon glyphicon-check"></i> Register</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+{%endblock%}

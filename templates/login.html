@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Log in</h3>
+                </div>
+                <div class="panel-body">
+                    {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ error }}</div>
+                    {% endfor %}
+
+                    <form class="form-horizontal" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="ask_input-login" class="col-md-2 control-label">Login</label>
+
+                            <div class="col-md-10">
+                                <input name='login' type="text" class="form-control" id="ask_input-login" placeholder="Login"
+                                       maxlength="21" value="">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="ask_input-password" class="col-md-2 control-label">Password</label>
+
+                            <div class="col-md-10">
+                                <input type="password" name='password' class="form-control" id="ask_input-password" maxlength="42"
+                                       placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i>
+                                    Log in
+                                </button>
+                                or <a href="{% url 'register' %}">Create a new account</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}

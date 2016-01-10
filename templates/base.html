@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://2.bp.blogspot.com/_PQYrKV_-jYQ/TA_BslJuWzI/AAAAAAAABZo/l_jTnpSQ71k/s1600/PMRN+Favicon+16x16.png">
+    <title>AskMe</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="http://vnikolaev.tk/polls/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="http://vnikolaev.tk/polls/css/style.css">
+  </head>
+  <body>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="glyphicon glyphicon-thumbs-up"></i> Ask Nikolaev </a>
+        </div>
+        <form class="navbar-form navbar-left">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type ="text" class="form-control" placeholder="Search">
+                    <span class ="input-group-btn">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                </div>
+                <a class="btn btn-link" href="{% url 'ask' %}"><i class="glyphicon glyphicon-plus"></i> Ask</a>
+            </div>
+        </form>
+        {% if user %}
+        {% include "auth.html" %}
+        {% else %}
+        {% include "not_auth.html" %}
+        {% endif %}
+        </div>
+        </nav>
+
+{% block main %} {% endblock %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Popular tags</h3>
+                </div>
+                <div class="panel-body text-justify">
+                   <a href="#"><h5 class="ask_tagcloud-tag">perl</h5></a>
+                    <a href="#"><h4 class="ask_tagcloud-tag text-danger">python</h4></a>
+                    <a href="#"><h4 class="ask_tagcloud-tag">TechnoPark</h4></a>
+                    <a href="#"><h3 class="ask_tagcloud-tag text-danger">MySQL</h3></a>
+                    <a href="#"><h4 class="ask_tagcloud-tag text-success">django</h4></a>
+                    <a href="#"><h5 class="ask_tagcloud-tag">Mail.Ru</h5></a>
+                    <a href="#"><h5 class="ask_tagcloud-tag">Voloshin</h5></a>
+                    <a href="#"><h5 class="ask_tagcloud-tag text-warning">Firefox</h5></a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Best:</h3>
+                </div>
+                <div class="panel-body">
+                     <ul>
+                        <li><a href="#">Mr.Freeman</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#">Dr.House</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#">Bender</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#">Queen Victoria</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#">V. Pupkin</a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    {%block scripts%} {%endblock%}
+  </body>
+</html>
+

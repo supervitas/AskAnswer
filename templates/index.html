@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container">
+    <div class="container">
+    <div class="row">
+        <div class="col-md-1">
+                Order by:
+                <lu  {% if not tag and not order or order == 'newest' %}class="active"{% endif %}><a href="/newest">New</a></lu>
+                <lu {% if order == 'hot' %}class= "active" {% endif %}><a href= "/hot">Hot</a></lu>
+
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-9">
+
+            <div class="panel panel-default">
+                {% if tag %}
+                <div class="panel-heading">
+                    <h3 class="panel-title">Tag:
+                        <a href="#"><strong class="text-danger">{{ tag }}</strong></a>
+                    </h3>
+                </div>
+                {% endif %}
+                {% if question_list %}
+                {% for question in question_list %}
+                <div class="panel-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="media">
+                                <div class="media-left text-center">
+                                        <img src="{{ question.author.avatar.url }}" class="img-thubnail" height="72px" width="72px">
+                                    <br>
+                                    <br>
+                                    <div class="btn-group">
+                                         <button type="button"  class="btn btn-xs btn-success" onclick="like({{question.id}}, 1, 'question')">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                        </button>
+                                        <div class="rating-label" id="like{{question.id}}">{{ question.rating }}</div>
+                                        <button type="button" class="btn btn-xs btn-danger" onclick="like({{question.id}}, -1, 'question')">
+                                            <i class="glyphicon glyphicon-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="list-group-item-heading media-heading">
+                                        <a href="/question/{{ question.id }}/">{{ question.title }}</a>
+                                    </h3>
+
+                                    <p class="list-group-item-text">{{ question.content|slice:":250" }}...
+                                    </p>
+                                    <hr>
+                                    <dl class="dl-horizontal dt pull-left ">
+                                        <dt>Tags:</dt>
+                                        <dd>
+                                            {% for tag in question.tags.all %}
+                                            <a class="glyphicon glyphicon-tag" href="/tag/{{ tag.title }}" class="tag">{{ tag.title }}</a>
+				                            {% endfor %}
+
+                                        </dd>
+                                    </dl>
+                                     <span class="pull-right">
+                                         <strong><i class="glyphicon glyphicon-time"></i>{{question.created}}</strong>
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+	                    <h1>No questions for this tag :(</h1>
+                    {% endif %}
+
+
+                    <nav class="text-center">
+                        <ul class="pagination">
+                            {% if question_list.has_previous %}
+                            <li>
+                                <a href="?page={{ question_list.previous_page_number }}{% if tag %}&amp;tag={{tag.title }}{% endif %}">&lt;&lt;</a>
+                            </li>
+                        {% endif %}
+                        {% if question_list.has_next %}
+                        <li>
+                          <a href="">{{ question_list.number }}</a>
+                        </li>
+                        {% endif %}
+                        {% if question_list.has_next %}
+                          <li>
+                            <a href="?page={{ question_list.next_page_number }}{% if tag %}&amp;tag={{ tag.title }}{% endif %}">&gt;&gt;</a>
+                          </li>
+                        {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        {% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+        $.ajaxSetup({
+             beforeSend: function(xhr, settings) {
+                 function getCookie(name) {
+                     var cookieValue = null;
+                     if (document.cookie && document.cookie != '') {
+                         var cookies = document.cookie.split(';');
+                         for (var i = 0; i < cookies.length; i++) {
+                             var cookie = jQuery.trim(cookies[i]);
+                             // Does this cookie string begin with the name we want?
+                         if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                             break;
+                         }
+                     }
+                 }
+                 return cookieValue;
+                 }
+                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     // Only send the token to relative URLs i.e. locally.
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                 }
+             }
+        });
+         function like(objectId, likeType, objectType) {
+            $.ajax({
+                url : "{% url 'like' %}",
+                type : "POST",
+                data : { like_type : likeType,
+                         object_id : objectId,
+                         object_type : objectType
+                        },
+                success : function(data) {
+                    $('#like'+objectId).text(data.new_rating);
+                    if (data.error) {
+                        alert(data.error);
+                    }
+                }
+            });
+        };
+
+</script>
+{% endblock %}

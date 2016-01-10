@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="media">
+                        <div class="media-left text-center">
+                            <div class="thumbnail">
+                                <img style="min-height:72px;height:72px; min-width:72px" src="{{ question.author.avatar.url }}">
+                            </div>
+
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-xs btn-success" onclick="like({{question.id}}, 1, 'question')">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                </button>
+                                <div id="like{{question.id}}">
+                                    <strong class="text-danger" >{{ question.rating }}</strong>
+                                    </div>
+                                <button type="submit" class="btn btn-xs btn-danger" onclick="like({{question.id}}, -1, 'question')">
+                                    <i class="glyphicon glyphicon-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="list-group-item-heading media-heading">
+                                <a href="#">{{ question.title }}</a>
+                            </h3>
+
+                            <p class="list-group-item-text">{{ question.content }}
+                            </p>
+                            <hr>
+                            <span class="pull-left">
+                                @
+                                <a href="#">{{question.author }}</a> asked
+                            </span>
+                            <dl class="dl-horizontal pull-left">
+                                <dt>Tags:</dt>
+                                <dd>
+                                  {% for tag in question.tags.all %}
+                                    <a class="glyphicon glyphicon-tag" href="/tag/{{ tag.title }}">{{tag.title}}</a>
+                                    {% endfor %}
+                                </dd>
+                            </dl>
+                            <span class="pull-right">
+                                    <strong><i class="glyphicon glyphicon-time"></i>{{question.created}}</strong>
+                            </span>
+                            <span class="clearfix"></span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="list-group">
+                        {% for answer in answer_list %}
+
+                        <div class="list-group-item" id="{{ answer.id }}">
+                            <div class="media">
+                                <div class="media-left text-center">
+                                    <div class="thumbnail">
+                                        <img width="72" height="72" src="{{ answer.author.avatar.url }}">
+                                    </div>
+                                    <div>
+                                         <button type="submit" class="btn btn-xs btn-success" onclick="like({{answer.id}}, 1, 'answer')">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                        </button>
+                                            <strong id="like{{answer.id}}" class="text">{{ answer.rating }} </strong>
+                                       <button type="submit" class="btn btn-xs btn-danger" onclick="like({{answer.id}}, -1, 'answer')">
+                                            <i class="glyphicon glyphicon-minus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="correct{{answer.id}}"
+                                                   {% if answer.correct %} checked
+                                                   {% endif %}
+                                                   {% if user != question.author %} disabled
+                                                   {% endif%}
+                                                   onclick="setCorrect({{ answer.id }})">Correct!
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="media-body">
+                                    <p class="list-group-item-text">{{ answer.content }}
+                                    </p>
+                                    <p class="pull-right"><a href="#">{{ answer.author }} </a> wrote {{ answer.created }}
+                                        </a></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <nav class = "text-center">
+                          <ul class="pagination">
+                            {% if answer_list.has_previous %}
+                              <li>
+                                <a href="?page={{ answer_list.previous_page_number }}">&lt;&lt;</a>
+                              </li>
+                            {% endif %}
+                            {% if answer_list.has_next %}
+                            <li>
+                              <a href="">{{ answer_list.number }}</a>
+                            </li>
+                            {% endif %}
+                            {% if answer_list.has_next %}
+                              <li>
+                                <a href="?page={{ answer_list.next_page_number }}">&gt;&gt;</a>
+                              </li>
+                            {% endif %}
+                          </ul>
+                        </nav>
+                        {% if user  %}
+                        <div class="list-group-item">
+                            <form method="post">
+                                {% csrf_token %}
+                                <a name="ask_your-answer-anchor"></a>
+                                <div class="form-group">
+                                    <label for="ask_your-answer-area" class="list-group-item-heading control-label">Your answer:</label>
+                                    <textarea id="ask_your-answer-area" class="form-control" name="content" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    @
+                                    <a href="#">{{ user.username }}</a>
+                                    <button type="submit" class="btn btn-primary pull-right ">
+                                        <i class="glyphicon glyphicon-comment"></i> Answer</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    $.ajaxSetup({
+         beforeSend: function(xhr, settings) {
+             function getCookie(name) {
+                 var cookieValue = null;
+                 if (document.cookie && document.cookie != '') {
+                     var cookies = document.cookie.split(';');
+                     for (var i = 0; i < cookies.length; i++) {
+                         var cookie = jQuery.trim(cookies[i]);
+                         // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+             }
+             if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                 // Only send the token to relative URLs i.e. locally.
+                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+             }
+         }
+    });
+
+    function like(objectId, likeType, objectType) {
+        $.ajax({
+            url : "{% url 'like' %}",
+            type : "POST",
+            data : { like_type : likeType,
+                     object_id : objectId,
+                     object_type : objectType
+                    },
+            success : function(data) {
+                $('#like'+objectId).text(data.new_rating);
+                if (data.error) {
+                    alert(data.error);
+                }
+            }
+        });
+    };
+
+    function setCorrect(answerId) {
+        $.ajax({
+            url : "{% url 'correct' %}",
+            type : "POST",
+            data : { answer_id : answerId },
+            success : function(data) {
+                $('#correct'+answerId).text(data.new_state);
+                if (data.error) {
+                    alert(data.error);
+                }
+            }
+        });
+    };
+    function validateAnswForm() {
+        var a=document.forms["answForm"]["answer"].value;
+        if (a==null || a=="") {
+          $('#id_answer').parent().addClass('has-error');
+          $('#id_answer').popover({ content: 'This field is required' });
+          return false;
+        }
+    };
+    $(document).ready(function() {
+         var anchorHash = {{anchor}};
+         var pos = $('#'+anchorHash).position();
+          window.scrollTo(0,pos.top);
+            $(function() {
+                    $('#'+anchorHash).fadeOut(600, function() {
+                        $(this).fadeIn(600);
+                    });
+
+                });
+
+        if (window.location.hash != null && window.location.hash != '')
+            $('body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            }, 500);
+
+
+    });
+</script>
+{% endblock %}

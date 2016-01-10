@@ -1,0 +1,27 @@
+<span class="navbar-text navbar-right media ask_navbar-media">
+            <span class="media-left">
+                <img class="img-thumbnail" width="62" height="42" src="{{ user.avatar.url }}">
+            </span>
+            <span class="media-body ask_navbar-media-body">
+                <span class="media-heading">
+                    {{user.username}}
+                </span>
+            </span>
+        </span>
+
+        <form class="navbar-form navbar-right">
+            <div class="form-group">
+                <div class="btn-group">
+                    <a href="{% url 'settings' %}">
+                    <button type="button" class="btn btn-link">
+                        <i class="glyphicon glyphicon-wrench"></i> Settings
+                    </button>
+                        </a>
+                    <a href="{% url 'logout' %}">
+                    <button type="button" class="btn btn-link">
+                        <i class="glyphicon glyphicon-log-out"></i> Log out
+                    </button>
+                        </a>
+                </div>
+            </div>
+        </form>
