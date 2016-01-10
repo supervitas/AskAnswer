@@ -197,6 +197,7 @@
         }
     };
     $(document).ready(function() {
+    {% if anchor %}
          var anchorHash = {{anchor}};
          var pos = $('#'+anchorHash).position();
           window.scrollTo(0,pos.top);
@@ -206,6 +207,7 @@
                     });
 
                 });
+     {% endif %}
 
         if (window.location.hash != null && window.location.hash != '')
             $('body').animate({

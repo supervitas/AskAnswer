@@ -242,7 +242,7 @@ def like(request):
 
         if user:
             new_rating = None
-            error = "Its your question or answer"
+            error = None
             result = 'Like wasn\'t created!'
 
             if object_type == 'answer':
@@ -260,6 +260,8 @@ def like(request):
                     except django.db.IntegrityError:
                         result = 'Like wasn\'t created!'
                         error = 'You cant  vote twice'
+                else:
+                    error = 'It is your Answer'
 
             elif object_type == 'question':
                 quest = Question.objects.get(id=object_id)
@@ -276,6 +278,8 @@ def like(request):
                     except django.db.IntegrityError:
                         result = 'Like wasn\'t created!'
                         error = 'You cant  vote twice'
+                else:
+                    error = 'It is your question'
 
             else:
                 result = 'Like wasn\'t created!'
