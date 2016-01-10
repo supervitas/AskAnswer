@@ -1,0 +1,22 @@
+html {
+	    overflow-y: scroll;
+    }
+
+    .ask_navbar-media {
+	        margin-top: 4px;
+		    margin-bottom: 4px;
+	    }
+
+	    .ask_navbar-media-body {
+		        width: auto;
+			    vertical-align: middle;
+		    }
+
+		    .ask_btn-inline {
+			        padding-top: 0;
+				    padding-bottom: 0;
+			    }
+
+			    .ask_tagcloud-tag {
+				        display: inline;
+				}
